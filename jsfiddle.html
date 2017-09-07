@@ -1,0 +1,7 @@
+<script src='https://unpkg.com/qs/dist/qs.js'></script>
+<script>
+  var params = Qs.parse(window.location.search, {ignoreQueryPrefix: true});
+  if(!params.id){
+      window.close;
+  }
+</script>
