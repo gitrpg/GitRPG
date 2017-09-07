@@ -1,9 +1,34 @@
 <script src='https://unpkg.com/qs/dist/qs.js'></script>
 <body>
 <script>
-  var params = Qs.parse(window.location.search, {ignoreQueryPrefix: true});
-  if(!params.id){
-      window.close();
-  }
+    ;(function(){
+        var params = Qs.parse(window.location.search, {ignoreQueryPrefix: true});
+        
+        if(!params.id){
+            return;
+        }
+        var $ = document.querySelector.bind(document);
+        fetch("https://api.github.com/repos/gitrpg/GitRPG/issues/" + params.id).then(resp => resp.json()).then(resp => {
+            var a = resp.body;
+            
+            var html = a.match(/```html([\w\W]*?)```/);
+            var js   = a.match(/```js([\w\W]*?)```/);
+            var css   = a.match(/```css([\w\W]*?)```/);
+            var data = {
+                html: html ? html[1] : "",
+                css : css  ? css[1] : "",
+                js  : js   ? js[1] : "",
+            }
+            $("#sub [name=html]").value = JSON.stringify(data.html);
+            $("#sub [name=css]").value = JSON.stringify(data.css);
+            $("#sub [name=js]").value = JSON.stringify(data.js);
+            $("#sub").submit();
+        });
+    })();
 </script>
+<form id='sub' style='display: none;' action='https://jsfiddle.net/api/post/library/pure' method='post' >
+    <input type='hidden' name='html'>
+    <input type='hidden' name='css'>
+    <input type='hidden' name='js'>
+</form>
 </body>
